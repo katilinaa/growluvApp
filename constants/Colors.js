@@ -1,5 +1,5 @@
 export const Colors = {
-    primary: '#6849a7',
+    primary: '#40c3ee',
     warning: '#cc475a',
 
     dark: {
@@ -7,17 +7,17 @@ export const Colors = {
         title: '#fff',
         background: '#252231',
         navBackground: '#201e2b',
-        iconColour: '#9591a5',
-        iconColourFocused: '#fff',
+        iconColour: '#ffffff',
+        iconColourFocused: '#40c3ee',
         uiBackground: '#2f2b3d',
     },
     light: {
         text: '#625f72',
         title: '#201e2b',
-        background: '#e0dfe8',
-        navBackground: '#e8e7ef',
-        iconColour: '#686477',
-        iconColourFocused: '#201e2b',
-        uiBackground: '#d6d5e1',
+        background: '#ffffff',
+        navBackground: '#ffffff',
+        iconColour: '#b7b7b7',
+        iconColourFocused: '#40c3ee',
+        uiBackground: '#ffffff',
     }
 }

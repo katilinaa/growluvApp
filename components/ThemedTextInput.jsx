@@ -12,10 +12,12 @@ const ThemedTextInput = ({style, ...props}) => {
             backgroundColor: theme.uiBackground,
             color: theme.text,
             padding: 20,
-            borderRadius: 6
+            borderRadius: 6,
+            outlineStyle: 'none'
         },
         style
     ]}
+    placeholderTextColor={theme.text + '80'}
     {...props}
     />
   )
