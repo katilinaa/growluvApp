@@ -1,4 +1,4 @@
-import { Keyboard, StyleSheet, Text, TouchableWithoutFeedback} from 'react-native'
+import { Keyboard, Platform, StyleSheet, Text, TouchableWithoutFeedback} from 'react-native'
 import React, { useState } from 'react'
 import { Link } from 'expo-router'
 import { Colors } from '../../constants/Colors'
@@ -13,21 +13,23 @@ import ThemedButton from '../../components/ThemedButton'
 
 const register = () => {
     const [email, setEmail] = useState('')
+    const [username, setUsername] = useState('')
     const [password, setPassword] = useState('')
+    const [error, setError] = useState(null)
 
     const {user, register} = useUser()
 
-    const handleSubmit = () => {
+    const handleSubmit = async () => {
+      setError(null)
         try{
-            register(email, password)
+            await register(email, password, username)
             console.log('Registered user:', user)
         } catch (error){
-
+            setError(error.message)
         }
     }
-    
-  return (
-    <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+  
+  const content = (
     <ThemedView style= {styles.container}>
         <Spacer />
       <ThemedText style ={styles.title} title={true}>
@@ -40,6 +42,8 @@ const register = () => {
         keyboardType="email-address"
         onChangeText={setEmail}
         value={email}
+        editable={true}
+        pointerEvents="auto"
       />
 
       <ThemedTextInput
@@ -48,17 +52,36 @@ const register = () => {
         onChangeText={setPassword}
         value={password}
         secureTextEntry={true}
+        editable={true}
+        pointerEvents="auto"
+      />
+
+      <ThemedTextInput
+        style={{width: '80%', marginBottom: 20}}
+        placeholder='Username'
+        onChangeText={setUsername}
+        value={username}
+        editable={true}
+        pointerEvents="auto"
       />
 
        <ThemedButton onPress={handleSubmit}>
         <Text style= {{color: "#f2f2f2"}}>Register</Text>
       </ThemedButton>
 
+      <Spacer />
+      {error && <Text style={styles.error}>{error}</Text>}
+
       <Spacer height={100} />
       <Link href="/login" >
        <ThemedText style= {{textAlign: 'center'}}>Already with us? Login here</ThemedText>
        </Link>
     </ThemedView>
+    )
+    
+  return Platform.OS == 'web' ? content : (
+    <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+      {content}
     </TouchableWithoutFeedback>
   )
 }
@@ -74,6 +97,15 @@ const styles = StyleSheet.create({
     title: {
         textAlign: 'center',
         fontSize: 18,
-        marginBottom: 30
-    }
+        marginBottom: 30,
+    },
+    error: {
+    color: Colors.warning,
+    padding: 10,
+    backgroundColor: '#f5c1c8',
+    borderColor: Colors.warning,
+    borderWidth: 1,
+    borderRadius: 6,
+    marginHorizontal: 10,
+  }
 })

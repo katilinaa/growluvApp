@@ -1,12 +1,31 @@
 import { StyleSheet, Text, } from 'react-native'
-import { Link } from 'expo-router'
-import React from 'react'
+import { Link, useRouter } from 'expo-router'
+import React, { useState, useEffect } from 'react'
+import { useUser } from '../contexts/UserContext'
 // Themed Components
 import ThemedView from '../components/ThemedView'
 import Spacer from '../components/Spacer'
 import ThemedText from '../components/ThemedText'
+import ThemedButton from '../components/ThemedButton'
+import ThemedLoader from '../components/ThemedLoader'
 
 const Home = () => {
+  const router = useRouter()
+  const { user, authChecked } = useUser()
+  useEffect(() => {
+    if (authChecked && user) {
+      router.replace('/(dashboard)/feed')
+    }
+  }, [user, authChecked])
+
+  if (!authChecked || user) {
+    return (
+      <ThemedView style={styles.container}>
+        <ThemedLoader></ThemedLoader>
+        <Text>Loading...</Text>
+      </ThemedView>
+    )
+  }
   return (
     <ThemedView style={styles.container}>
       <ThemedText style ={styles.title} title={true}>
@@ -17,14 +36,11 @@ const Home = () => {
       <ThemedText >Sign in to your account.</ThemedText>
       <Spacer height={20} />
        
-       <Link href="/login" style={styles.link}>
-       <ThemedText>Login Page</ThemedText>
-       </Link>
+      <ThemedButton onPress ={() => router.push('/login')}>
+        <Text style= {{color: "#f2f2f2"}}>Login</Text>
+      </ThemedButton>
        <Link href="/register" style={styles.link}>
-         <ThemedText>Register Page</ThemedText>
-        </Link>
-         <Link href="/profile" style={styles.link}>
-         <ThemedText>Profile Page</ThemedText>
+         <ThemedText>New To GrowLuv? Sign Up</ThemedText>
         </Link>
     </ThemedView>
   )
@@ -43,6 +59,5 @@ const styles = StyleSheet.create({
   },
   link: {
     marginVertical: 10,
-    borderBottomWidth: 1
   }
 })

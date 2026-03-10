@@ -1,6 +1,6 @@
-import { Keyboard, StyleSheet, Text, TouchableWithoutFeedback} from 'react-native'
+import { Keyboard, StyleSheet, Text, TouchableWithoutFeedback, Platform} from 'react-native'
 import React, { useState } from 'react'
-import { Link } from 'expo-router'
+import { Link, router } from 'expo-router'
 import { Colors } from '../../constants/Colors'
 import { useUser } from '../../contexts/UserContext'
 
@@ -11,54 +11,67 @@ import ThemedText from '../../components/ThemedText'
 import ThemedTextInput from '../../components/ThemedTextInput'
 import ThemedButton from '../../components/ThemedButton'
 
+
 const login = () => {
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
+    const [error, setError] = useState(null)
 
-    const { login } = useUser()
+    const { login, user } = useUser()
 
-    const handleSubmit = () => {
+    const handleSubmit = async () => {
+      setError(null)
         try{
-            login(email, password)
-            console.log('Registered user:', user)
+            await login(email, password)
+            router.push('/feed')
         } catch (error){
-
+            setError(error.message)
         }
     }
-
-  return (
-    <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-    <ThemedView style= {styles.container}>
+    const content = (<ThemedView style= {styles.container}>
         <Spacer />
       <ThemedText style ={styles.title} title={true}>
         Login to your account
       </ThemedText>
 
       <ThemedTextInput
-        style={{width: '80%', marginBottom: 20}}
-        placeholder='Email'
+        style={{width: '80%', marginBottom: 10, borderRadius: 6}}
+        placeholder='Email Address'
         keyboardType="email-address"
         onChangeText={setEmail}
         value={email}
+        editable={true}
+        pointerEvents="auto"
       />
 
       <ThemedTextInput
-        style={{width: '80%', marginBottom: 20}}
+        style={{width: '80%', marginBottom: 5}}
         placeholder='Password'
         onChangeText={setPassword}
         value={password}
         secureTextEntry={true}
+        editable={true}
+        pointerEvents="auto"
       />
      
       <ThemedButton onPress={handleSubmit}>
         <Text style= {{color: "#f2f2f2"}}>Login</Text>
       </ThemedButton>
 
-      <Spacer height={100} />
+      <Spacer height={10} />
+      {error && <Text style={styles.error}>{error}</Text>}
+       <Spacer />
+
+      <Spacer height={10} />
       <Link href="/register" >
        <ThemedText style= {{textAlign: 'center'}}>New to GrowLuv? Sign up here</ThemedText>
        </Link>
+
     </ThemedView>
+    )
+  return Platform.OS == 'web' ? content : (
+    <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+      {content}
     </TouchableWithoutFeedback>
   )
 }
@@ -83,5 +96,14 @@ const styles = StyleSheet.create({
     },
     pressed: {
         opacity: 0.8,
-    }
+    },
+    error: {
+    color: Colors.warning,
+    padding: 10,
+    backgroundColor: '#f5c1c8',
+    borderColor: Colors.warning,
+    borderWidth: 1,
+    borderRadius: 6,
+    marginHorizontal: 10,
+  }
 })

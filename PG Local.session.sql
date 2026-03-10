@@ -1,0 +1,2 @@
+ALTER TABLE posts
+ADD COLUMN media_type VARCHAR(20) NOT NULL DEFAULT 'image';

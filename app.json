@@ -1,6 +1,6 @@
 {
   "expo": {
-    "scheme": "growluvapp", 
+    "scheme": "growluvapp",
     "name": "growluv_app",
     "slug": "growluv_app",
     "version": "1.0.0",
@@ -28,7 +28,20 @@
       "favicon": "./assets/favicon.png"
     },
     "plugins": [
-      "expo-router"
+      "expo-router",
+      [
+        "react-native-video",
+        {
+          "enableNotificationControls": true,
+          "androidExtensions": {
+            "useExoplayerRtsp": false,
+            "useExoplayerHls": false,
+            "useExoplayerDash": false,
+            "useExoplayerSmoothStreaming": false
+          }
+        }
+      ],
+      "expo-video"
     ]
   }
 }
